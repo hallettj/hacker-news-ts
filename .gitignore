@@ -1,0 +1,10 @@
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Generated files
+lib/
+dist/
+
+# Misc
+.DS_Store

@@ -1,0 +1,16 @@
+{
+  "name": "type-driven-validation",
+  "version": "1.0.0",
+  "description": "Type-driven data validation",
+  "main": "index.js",
+  "author": "Jesse Hallett <jesse@sitr.us>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node-fetch": "^1.6.7",
+    "typescript": "^2.7.2"
+  },
+  "dependencies": {
+    "io-ts": "^1.0.5",
+    "node-fetch": "^2.1.1"
+  }
+}
