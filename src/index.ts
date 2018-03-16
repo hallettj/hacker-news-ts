@@ -2,11 +2,11 @@
  * This is a demonstration of type checking with TypeScript. This example is
  * a Hacker News client.
  *
- * Take a look at the accompanying blog post:
- * TODO
+ * This module may be imported as a library. If run directly it will use some
+ * very simple code to print out recent story titles to the command line.
  *
- * The full code for this project is here:
- * https://github.com/hallettj/typescript-hacker-news
+ * Take a look at the accompanying blog post:
+ * http://www.olioapps.com/blog/checking-types-against-the-real-world-in-typescript/
  */
 import * as t from "io-ts";
 import { reporter } from "io-ts-reporters";
@@ -126,6 +126,8 @@ export async function fetchItem(id: ID): Promise<Item> {
   return decodeToPromise(ItemV, obj);
 }
 
+// If you know the type of the item to be fetched use this function with
+// a validator for that specific type.
 async function fetchItemType<T>(validator: t.Type<T>, id: ID): Promise<T> {
   const res = await fetch(
     `https://hacker-news.firebaseio.com/v0/item/${id}.json`
@@ -174,15 +176,6 @@ export async function fetchTopStories(count: number): Promise<Item[]> {
   return Promise.all(ids.slice(0, count).map(id => fetchItem(id)));
 }
 
-function getTitleCowboyStyle(item: Item): string | undefined {
-  switch (item.type) {
-    case "story":
-    case "job":
-    case "poll":
-      return item.title;
-  }
-}
-
 /* a very basic client */
 
 export async function main() {
@@ -201,9 +194,10 @@ if (require.main === module) {
 
 /* utility functions */
 
+// Produces a validator that is a union of the given type with `undefined`
 function optional<RT extends t.Any>(
   type: RT,
-  name: string = `?${type.name}`
+  name: string = `${type.name} | undefined`
 ): t.UnionType<
   [RT, t.UndefinedType],
   t.TypeOf<RT> | undefined,
@@ -213,6 +207,7 @@ function optional<RT extends t.Any>(
   return t.union<[RT, t.UndefinedType]>([type, t.undefined], name);
 }
 
+// Apply a validator and get the result in a `Promise`
 function decodeToPromise<T, O, I>(
   validator: t.Type<T, O, I>,
   input: I
